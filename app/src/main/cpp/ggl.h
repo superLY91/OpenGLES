@@ -15,3 +15,6 @@
 #include <map>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <android/log.h>
+
+#define printf(...) __android_log_print(ANDROID_LOG_DEBUG, "LY", __VA_ARGS__);
