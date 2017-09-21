@@ -4,15 +4,19 @@
 #include "utils.h"
 #include "ground.h"
 #include "model.h"
+#include "skybox.h"
+
 // 没有设置时默认为单位矩阵
 glm::mat4 modelMartix, viewMatrix, projectionMatrix;
 Ground ground;
 Model model;
+SkyBox skyBox;
 void Init() {
     ground.Init();
     model.Init("Res/Sphere.obj");
     model.SetTexture("Res/earth.bmp");
     model.SetPosition(0.0f, 0.0f, -5.0f);
+    skyBox.Init("Res/");
 }
 
 void SetViewPortSize(float width, float height) {
@@ -26,6 +30,9 @@ void Draw() {
     // 背景设置为黑色 方便观察地面光照
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // 在所以物体绘制之前绘制天空盒，因为为了保证天空盒在最远处，skyBox.Draw关闭了深度测试
+    skyBox.Draw(viewMatrix, projectionMatrix);
 
     ground.Draw(viewMatrix, projectionMatrix);
     model.Draw(viewMatrix, projectionMatrix);
