@@ -118,11 +118,20 @@ void Model::Init(const char *modelPath) {
     mShader -> SetVec4("U_LightAmbient", 1.0f, 1.0f, 1.0f, 1.0f);
     // 设置光的 漫反射 分量 白色
     mShader -> SetVec4("U_LightDiffuse", 1.0f, 1.0f, 1.0f, 1.0f);
+    // 设置光的 镜面反射 分量 白色
+    mShader -> SetVec4("U_LightSpecular", 1.0f, 1.0f, 1.0f, 1.0f);
+
     // 设置模型表面对 环境光 的反射系数
     mShader -> SetVec4("U_AmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
     // 设置模型表面对 漫反射 的反射系数
     mShader -> SetVec4("U_DiffuseMaterial", 0.6f, 0.6f, 0.6f, 1.0f);
+    // 设置模型表面对 镜面反射 的反射系数
+    mShader -> SetVec4("U_SpecularMaterial", 1.0f, 1.0f, 1.0f, 1.0f);
 
+    // 摄像机的位置
+    mShader -> SetVec4("U_CameraPos", 0.0f, 0.0f, 0.0f, 1.0f);
+    // 对镜面反射光照强度取32次幂, 是光照非线性，满足正太分布
+    mShader -> SetVec4("U_LightOpt", 32.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void Model::Draw(glm::mat4 &viewMatrix, glm::mat4 projectionMatrix) {

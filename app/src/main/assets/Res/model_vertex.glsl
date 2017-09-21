@@ -8,8 +8,10 @@ uniform mat4 ProjectionMatrix;
 uniform mat4 IT_ModelMatrix;
 varying vec4 V_Color;
 varying vec4 V_Normal;
+varying vec4 V_WorldPos;
 void main() {
     V_Color = color;
     V_Normal = IT_ModelMatrix * normal;
+    V_WorldPos = ModelMatrix * position;
     gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * position;
 }
