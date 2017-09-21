@@ -112,6 +112,10 @@ void Model::Init(const char *modelPath) {
 
     mShader = new Shader;
     mShader -> Init("Res/model_vertex.glsl", "Res/model_fragment.glsl");
+    // 设置光的环境光分量 白色
+    mShader -> SetVec4("U_LightAmbient", 1.0f, 1.0f, 1.0f, 1.0f);
+    // 设置模型表面对环境光的反射系数
+    mShader -> SetVec4("U_AmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
 }
 
 void Model::Draw(glm::mat4 &viewMatrix, glm::mat4 projectionMatrix) {
