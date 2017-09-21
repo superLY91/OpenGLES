@@ -30,6 +30,17 @@ void Ground::Init() {
     }
     mShader = new Shader;
     mShader -> Init("Res/ground_vertex.glsl", "Res/ground_fragment.glsl");
+    // 设置光源位置
+    mShader -> SetVec4("U_LightPos", 0.0f, 0.0f, 1.0f, 0.0f);
+    // 设置光的 环境光 分量 白色
+    mShader -> SetVec4("U_LightAmbient", 1.0f, 1.0f, 1.0f, 1.0f);
+    // 设置光的 漫反射 分量 白色
+    mShader -> SetVec4("U_LightDiffuse", 1.0f, 1.0f, 1.0f, 1.0f);
+    // 设置模型表面对 环境光 的反射系数
+    mShader -> SetVec4("U_AmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
+    // 设置模型表面对 漫反射 的反射系数
+    mShader -> SetVec4("U_DiffuseMaterial", 0.6f, 0.6f, 0.6f, 1.0f);
+
 }
 
 void Ground::Draw(glm::mat4 & viewMatrix, glm::mat4 & projectionMatrix) {
