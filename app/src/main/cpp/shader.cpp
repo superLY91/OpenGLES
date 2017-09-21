@@ -34,9 +34,18 @@ void Shader::Bind(float *M, float *V, float *P) {
     glUniformMatrix4fv(mViewMatrixLocation, 1, GL_FALSE, V);
     glUniformMatrix4fv(mProjectionMatrixLocation, 1, GL_FALSE, P);
 
-    if (mTexture.mLocation != -1) {
-        glBindTexture(GL_TEXTURE_2D, mTexture.mTexture);
-        glUniform1i(mTexture.mLocation, 0);
+    // shader中每个变量都对应着一组插槽，
+    // 设置纹理时有另一组纹理插槽（纹理单元texture unit)，
+    // 纹理对象指图片
+    // 需要将shader中的sampler2D(纹理采样器)的插槽，与纹理单元对应起来，并且将纹理对象绑定到纹理单元上
+    int index = 0;
+    for (auto iter = mUniformTextures.begin(); iter != mUniformTextures.end(); ++iter) {
+        // 激活一个纹理单元(texture unit),从0号位置开始
+        glActiveTexture(GL_TEXTURE0 + index);
+        // 将某一个纹理对象设置当前的纹理对象，并把她指派给当前激活了的纹理单元
+        glBindTexture(GL_TEXTURE_2D, iter->second->mTexture);
+        // 告诉哪一个插槽应该取第几个纹理单元中取纹理，插槽和sampler2D是关联的，所以sampler2D就指定去哪采集纹理
+        glUniform1i(iter->second->mLocation, index++);
     }
 
     glEnableVertexAttribArray(mPositionLocation);
@@ -57,11 +66,19 @@ void Shader::Bind(float *M, float *V, float *P) {
  * @param imagePath 图片的路径
  */
 void Shader::SetTexture(const char * name, const char * imagePath) {
-    if (mTexture.mLocation == -1) {
+    // 如果找到了证明之前设置过 只需要更新纹理，
+    // 如果没有找到，创建新UniformTexture，并添加到mUniformTextures中
+    auto iter = mUniformTextures.find(name);
+    if (iter == mUniformTextures.end()) {
         GLuint location = glGetUniformLocation(mProgram, name);
         if (location != -1) {
-            mTexture.mLocation = location;
-            mTexture.mTexture = CreateTexture2DFromBMP(imagePath);
+            UniformTexture *t = new UniformTexture;
+            t -> mLocation = location;
+            t -> mTexture =  CreateTexture2DFromBMP(imagePath);
+            mUniformTextures.insert(std::pair<std::string, UniformTexture*>(name, t));
         }
+    } else {
+        glDeleteTextures(1, &iter->second->mTexture);
+        iter->second->mTexture = CreateTexture2DFromBMP(name);
     }
 }

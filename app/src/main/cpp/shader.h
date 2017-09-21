@@ -13,7 +13,8 @@ struct UniformTexture {
 class Shader {
 public:
     GLuint mProgram;
-    UniformTexture mTexture;
+    // 储存多张纹理
+    std::map<std::string, UniformTexture*> mUniformTextures;
     GLint mModelMatrixLocation, mViewMatrixLocation, mProjectionMatrixLocation;
     GLint mPositionLocation, mColorLocation, mTexcoordLocation, mNormalLocation;
     // vs fs 分别指向VertexShader FragmentShader 的路径

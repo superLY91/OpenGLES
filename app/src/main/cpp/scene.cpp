@@ -3,12 +3,9 @@
 #include "ggl.h"
 #include "utils.h"
 #include "ground.h"
-
-GLuint texture;
 // 没有设置时默认为单位矩阵
 glm::mat4 modelMartix, viewMatrix, projectionMatrix;
 Ground ground;
-GLint texcoordLocation, textureLocation;
 Shader *shader;
 VertexBuffer *vertexBuffer;
 void Init() {
@@ -26,6 +23,7 @@ void Init() {
     shader = new Shader;
     shader -> Init("Res/test_vertex.glsl", "Res/test_fragment.glsl");
     shader -> SetTexture("U_Texture", "Res/test.bmp");
+    shader -> SetTexture("U_Texture2", "Res/test2.bmp");
     modelMartix=glm::translate(0.0f, 0.0f, -0.6f);
     ground.Init();
 }
