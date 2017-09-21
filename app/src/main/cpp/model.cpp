@@ -45,7 +45,7 @@ void Model::Init(const char *modelPath) {
                     ssOneLine >> floatData.v[1];
                     // 放到容器里面
                     texcoords.push_back(floatData);
-                    printf("texcoords: %f,%f\n", floatData.v[0], floatData.v[1]);
+//                    printf("texcoords: %f,%f\n", floatData.v[0], floatData.v[1]);
                 } else if (szOneLine[1] == 'n') {
                     // 输出一个字符串(vn)到temp
                     ssOneLine >> temp;
@@ -54,7 +54,7 @@ void Model::Init(const char *modelPath) {
                     ssOneLine >> floatData.v[1];
                     ssOneLine >> floatData.v[2];
                     normals.push_back(floatData);
-                    printf("normal: %f,%f,%f\n", floatData.v[0], floatData.v[1], floatData.v[2]);
+//                    printf("normal: %f,%f,%f\n", floatData.v[0], floatData.v[1], floatData.v[2]);
                 } else {
                     // 输出一个字符串(v)到temp
                     ssOneLine >> temp;
@@ -63,7 +63,7 @@ void Model::Init(const char *modelPath) {
                     ssOneLine >> floatData.v[1];
                     ssOneLine >> floatData.v[2];
                     positions.push_back(floatData);
-                    printf("position: %f,%f,%f\n", floatData.v[0], floatData.v[1], floatData.v[2]);
+//                    printf("position: %f,%f,%f\n", floatData.v[0], floatData.v[1], floatData.v[2]);
                 }
             } else if (szOneLine[0] == 'f') { // 绘制指令
                 // 因为是三角形所以有 1/1/1 2/2/2 3/3/3 三个数据
@@ -90,7 +90,7 @@ void Model::Init(const char *modelPath) {
                     vd.normalIndex = atoi(normalIndexStr.c_str());
                     vertexes.push_back(vd);
                 }
-                printf("draw command : %s\n", szOneLine);
+//                printf("draw command : %s\n", szOneLine);
             }
         }
     }
@@ -121,17 +121,15 @@ void Model::Init(const char *modelPath) {
     // 设置光的 镜面反射 分量 白色
     mShader -> SetVec4("U_LightSpecular", 1.0f, 1.0f, 1.0f, 1.0f);
 
-    // 设置模型表面对 环境光 的反射系数
-    mShader -> SetVec4("U_AmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
-    // 设置模型表面对 漫反射 的反射系数
-    mShader -> SetVec4("U_DiffuseMaterial", 0.6f, 0.6f, 0.6f, 1.0f);
-    // 设置模型表面对 镜面反射 的反射系数
-    mShader -> SetVec4("U_SpecularMaterial", 1.0f, 1.0f, 1.0f, 1.0f);
-
     // 摄像机的位置
     mShader -> SetVec4("U_CameraPos", 0.0f, 0.0f, 0.0f, 1.0f);
-    // 对镜面反射光照强度取32次幂, 是光照非线性，满足正太分布
+    // x: 对镜面反射光照强度取32次幂, 是光照非线性，满足正太分布
+    // w: 控制纹理与光照混合的方式
     mShader -> SetVec4("U_LightOpt", 32.0f, 0.0f, 0.0f, 0.0f);
+
+    SetAmbientMaterial(0.1f, 0.1f, 0.1f, 1.0f);
+    SetDiffuseMaterial(0.6f, 0.6f, 0.6f, 1.0f);
+    SetSpecularMaterial(1.0f, 1.0f, 1.0f, 1.0);
 }
 
 void Model::Draw(glm::mat4 &viewMatrix, glm::mat4 projectionMatrix) {
@@ -146,4 +144,23 @@ void Model::Draw(glm::mat4 &viewMatrix, glm::mat4 projectionMatrix) {
 
 void Model::SetPosition(float x, float y, float z) {
     mModelMatrix = glm::translate(x, y, z);
+}
+
+void Model::SetAmbientMaterial(float r, float g, float b, float a) {
+    // 设置模型表面对 环境光 的反射系数
+    mShader -> SetVec4("U_AmbientMaterial", r, g, b, a);
+}
+
+void Model::SetDiffuseMaterial(float r, float g, float b, float a) {
+    // 设置模型表面对 漫反射 的反射系数
+    mShader -> SetVec4("U_DiffuseMaterial", r, g, b, a);
+}
+
+void Model::SetSpecularMaterial(float r, float g, float b, float a) {
+    // 设置模型表面对 镜面反射 的反射系数
+    mShader -> SetVec4("U_SpecularMaterial", r, g, b, a);
+}
+
+void Model::SetTexture(const char *imagePath) {
+    mShader -> SetTexture("U_Texture", imagePath);
 }

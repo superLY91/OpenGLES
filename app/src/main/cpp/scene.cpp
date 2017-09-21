@@ -11,6 +11,7 @@ Model model;
 void Init() {
     ground.Init();
     model.Init("Res/Sphere.obj");
+    model.SetTexture("Res/earth.bmp");
     model.SetPosition(0.0f, 0.0f, -5.0f);
 }
 
