@@ -8,9 +8,9 @@
 
 // 没有设置时默认为单位矩阵
 glm::mat4 modelMartix, viewMatrix, projectionMatrix;
-glm::vec3 cameraPos(10.0f, 5.0f, 10.0f);
+glm::vec3 cameraPos(10.0f, 10.0f, 10.0f);
 Ground ground;
-Model model;
+Model model, niutou;
 SkyBox skyBox;
 void Init() {
     viewMatrix = glm::lookAt(cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -19,6 +19,9 @@ void Init() {
     model.SetTexture("Res/earth.bmp");
     model.SetPosition(0.0f, 0.0f, 0.0f);
     skyBox.Init("Res/");
+    niutou.Init("Res/niutou.obj");
+//    niutou.SetTexture("Res/niutou.bmp");
+    niutou.mModelMatrix = glm::translate(-5.0f, 0.0f, 4.0f) * glm::scale(0.05f, 0.05f, 0.05f);
 }
 
 void SetViewPortSize(float width, float height) {
@@ -38,4 +41,5 @@ void Draw() {
 
     ground.Draw(viewMatrix, projectionMatrix);
     model.Draw(viewMatrix, projectionMatrix, cameraPos.x, cameraPos.y, cameraPos.z);
+    niutou.Draw(viewMatrix, projectionMatrix, cameraPos.x, cameraPos.y, cameraPos.z);
 }

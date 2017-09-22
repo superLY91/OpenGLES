@@ -15,6 +15,21 @@ varying vec4 V_Color;
 varying vec4 V_Normal;
 varying vec4 V_WorldPos;
 varying vec4 V_Texcoord;
+vec4 GetPointLight() {
+    float distance = 0.0;
+    float constantFactor = 1.0;
+    float linearFactor = 0.0;
+    float quadricFactor = 0.0;
+    vec4 ambientColor = U_LightAmbient * U_AmbientMaterial;
+    vec3 L = vec3(0.0, 1.0, 0.0) - V_WorldPos.xyz;
+    distance = length(L);
+    float attenuation = 1.0 / (constantFactor + linearFactor * distance + quadricFactor * quadricFactor * distance);
+    L = normalize(L);
+    vec3 n = normalize(V_Normal.xyz);
+    float diffuseIntensity = max(0.0, dot(L, n));
+    vec4 diffuseColor = vec4(1.0, 1.0, 1.0, 1.0) * vec4(0.1, 0.4, 0.6, 1.0) * diffuseIntensity * attenuation * 2.0;
+    return ambientColor + diffuseColor;
+}
 void main() {
     vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
     vec4 ambientColor = U_LightAmbient * U_AmbientMaterial;
@@ -36,7 +51,8 @@ void main() {
     if (U_LightOpt.w == 1.0) {
         color = ambientColor + diffuseColor * texture2D(U_Texture, V_Texcoord.xy) + specularColor;
     } else {
-        color = (ambientColor + diffuseColor) * texture2D(U_Texture, V_Texcoord.xy);
+        color = ambientColor + diffuseColor + GetPointLight();
+        color = color * texture2D(U_Texture, V_Texcoord.xy);
     }
 
     gl_FragColor = color;

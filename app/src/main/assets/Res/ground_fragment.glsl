@@ -9,6 +9,7 @@ uniform vec4 U_DiffuseMaterial;
 varying vec4 V_Color;
 varying vec3 V_Normal;
 varying vec3 V_WorldPos;
+
 void main() {
     vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
     float distance = 0.0;
@@ -22,7 +23,7 @@ void main() {
     L = normalize(L);
     vec3 n = normalize(V_Normal.xyz);
     float diffuseIntensity = max(0.0, dot(L, n));
-    vec4 diffuseColor = U_LightDiffuse * U_DiffuseMaterial * diffuseIntensity * attenuation;
+    vec4 diffuseColor = U_LightDiffuse * U_DiffuseMaterial * diffuseIntensity * attenuation * 4.0;
     color = ambientColor + diffuseColor;
     gl_FragColor = color * V_Color;
 }

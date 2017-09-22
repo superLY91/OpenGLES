@@ -6,8 +6,8 @@
 class Model{
     VertexBuffer *mVertexBuffer;
     Shader*mShader;
-    glm::mat4 mModelMatrix;
 public:
+    glm::mat4 mModelMatrix;
     Model();
     void Init(const char * modelPath);
     // xyz 摄像机的位置
