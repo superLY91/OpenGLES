@@ -88,6 +88,29 @@ void Shader::SetTexture(const char * name, const char * imagePath) {
     }
 }
 
+/**
+ *
+ * @param name uniform变量在shader中的名字
+ * @param texture 程序纹理对象
+ */
+void Shader::SetTexture(const char * name, GLuint texture) {
+    // 如果找到了证明之前设置过 只需要更新纹理，
+    // 如果没有找到，创建新UniformTexture，并添加到mUniformTextures中
+    auto iter = mUniformTextures.find(name);
+    if (iter == mUniformTextures.end()) {
+        GLuint location = glGetUniformLocation(mProgram, name);
+        if (location != -1) {
+            UniformTexture *t = new UniformTexture;
+            t -> mLocation = location;
+            t -> mTexture = texture;
+            mUniformTextures.insert(std::pair<std::string, UniformTexture*>(name, t));
+        }
+    } else {
+        glDeleteTextures(1, &iter->second->mTexture);
+        iter->second->mTexture = texture;
+    }
+}
+
 void Shader::SetVec4(const char *name, float x, float y, float z, float w) {
     auto iter = mUniformVec4s.find(name);
     if (iter == mUniformVec4s.end()) {

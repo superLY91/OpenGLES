@@ -13,3 +13,5 @@ unsigned char* DecodeBMP(unsigned char* bmpFileData, int& width, int& height);
 GLuint CreateTexture2D(unsigned char*pixelData, int width, int height, GLenum type);
 GLuint CreateTexture2DFromBMP(const char * bmpPath);
 GLuint CreateBufferObject(GLenum bufferType, GLsizeiptr size, GLenum usage, void*data = nullptr);
+// 生成程序纹理 size 宽或高 正方形
+GLuint CreateProcedureTexture(int size);

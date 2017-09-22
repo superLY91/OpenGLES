@@ -25,5 +25,5 @@ public:
     void Bind();
     void Unbind();
     // 获取某一个顶点的应用
-    Vertex & get(int index);
+    Vertex & Get(int index);
 };

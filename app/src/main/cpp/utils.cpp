@@ -200,3 +200,36 @@ GLuint CreateBufferObject(GLenum bufferType, GLsizeiptr size, GLenum usage, void
     glBindBuffer(bufferType, 0);
     return object;
 }
+
+// size 代表 长宽都是相等的大小size, halfSize = size / 2
+// 纹理方块中心点的坐标为（halfSize, halfSize）
+GLuint CreateProcedureTexture(int size) {
+    // rgba 每个像素占用一个unsigned char，rgba分别占用一个unsigned char
+    unsigned char *imageData = new unsigned char[size*size * 4];
+    float halfSize = (float) size / 2.0f;
+    // 方块上离中心点最园的距离，对角线的一半
+    float maxDistance = sqrtf(halfSize*halfSize + halfSize*halfSize);
+    float centerX = halfSize;
+    float centerY = halfSize;
+    for(int y = 0; y < size; ++y) {
+        for (int x = 0; x < size; ++x) {
+            int currentPixelOffset = (x + y * size) * 4;
+            imageData[currentPixelOffset] = 255;
+            imageData[currentPixelOffset + 1] = 255;
+            imageData[currentPixelOffset + 2] = 255;
+            float deltaX = (float)x - centerX;
+            float deltaY = (float)y - centerY;
+            // 当前正在遍历的点距离中心的距离
+            float distance = sqrtf(deltaX*deltaX + deltaY*deltaY);
+            // 离中心点越远 alpha越小 线性
+            // float alpha = 1.0f - distance / maxDistance;
+            // 非线性 取幂 正太分布 8次幂
+            float alpha = powf(1.0f - distance / maxDistance, 8.0f);
+            alpha = alpha > 1.0f ? 1.0f : alpha;
+            imageData[currentPixelOffset + 3] = (unsigned char)(alpha * 255);
+        }
+    }
+    GLuint texture = CreateTexture2D(imageData,size,size,GL_RGBA);
+    delete imageData;
+    return texture;
+}

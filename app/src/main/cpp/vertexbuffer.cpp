@@ -45,6 +45,6 @@ void VertexBuffer::Unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Vertex&VertexBuffer::get(int index) {
+Vertex&VertexBuffer::Get(int index) {
     return mVertexes[index];
 }
