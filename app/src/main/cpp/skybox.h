@@ -15,5 +15,6 @@ public:
     void InitRight(const char *imageDir);
     void InitTop(const char *imageDir);
     void InitBottom(const char *imageDir);
-    void Draw(glm::mat4 &V, glm::mat4 &P);
+    // xyz 摄像机的位置
+    void Draw(glm::mat4 &V, glm::mat4 &P, float x, float y, float z);
 };

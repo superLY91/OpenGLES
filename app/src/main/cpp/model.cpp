@@ -132,7 +132,8 @@ void Model::Init(const char *modelPath) {
     SetSpecularMaterial(1.0f, 1.0f, 1.0f, 1.0);
 }
 
-void Model::Draw(glm::mat4 &viewMatrix, glm::mat4 projectionMatrix) {
+void Model::Draw(glm::mat4 &viewMatrix, glm::mat4 projectionMatrix, float x, float y, float z) {
+    mShader -> SetVec4("U_CameraPos", x, y, z, 1.0);
     glEnable(GL_DEPTH_TEST);
     mVertexBuffer -> Bind();
     glm::mat4 it = glm::inverseTranspose(mModelMatrix);
